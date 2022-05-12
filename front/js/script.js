@@ -16,9 +16,9 @@ fetch("http://localhost:3000/api/products/")
             console.log(product.name);
             html += `<a href="./product.html?id=${product._id}">
             <article>
-              <img src=".../product01.jpg" alt="Lorem ipsum dolor sit amet, Kanap name1">
+              <img src="${product.imageUrl}" alt="${product.altTxt}">
               <h3 class="productName">${product.name}</h3>
-              <p class="productDescription">Dis enim malesuada risus sapien gravida nulla nisl arcu. Dis enim malesuada risus sapien gravida nulla nisl arcu.</p>
+              <p class="productDescription">${product.description}</p>
             </article>
           </a>`;
 
@@ -30,6 +30,7 @@ fetch("http://localhost:3000/api/products/")
 
     })
 })
+
 
 
 
