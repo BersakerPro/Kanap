@@ -24,9 +24,13 @@ fetch (fetchingUrl)
 
         document.querySelector("#description").innerHTML = `<p id="description">${product.description}</p>`;
 
-        let htmlColor = ''
-        htmlColor += `<option value="${product.colors[0]}">${product.colors[0]}</option>
-        <option value="${product.colors[1]}">${product.colors[1]}</option>`
+        
+        let htmlColor = '';
+        for(let color of product.colors){
+            console.log(color) 
+            htmlColor += `<option value="${color}">${color}</option>`;
+        }
+        console.log(htmlColor)
         document.querySelector("#colors").innerHTML = htmlColor;
 
     })    
