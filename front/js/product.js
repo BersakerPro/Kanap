@@ -36,6 +36,24 @@ fetch (fetchingUrl)
     })    
 })
     
+function saveBasket(basket){
+    localStorage.setItem("basket" , basket);
+}
+
+function getBasket() {
+    return localStorage.getItem("basket");
+    if (basket == null){
+        return []
+    }else{
+        return JSON.parse(basket)
+    }
+}
+
+function addBasket(product){
+    let basket = getBasket()
+    basket.push(product)
+    
+}
 
  
    
