@@ -25,7 +25,7 @@ fetch (fetchingUrl)
         document.querySelector("#description").innerHTML = `<p id="description">${product.description}</p>`;
 
         
-        let htmlColor = '';
+        let htmlColor = `<option value="">--SVP, choisissez une couleur --</option>` + '';
         for(let color of product.colors){
             console.log(color) 
             htmlColor += `<option value="${color}">${color}</option>`;
@@ -33,11 +33,13 @@ fetch (fetchingUrl)
         console.log(htmlColor)
         document.querySelector("#colors").innerHTML = htmlColor;
 
-    })    
+    })  
 })
+
+
     
 function saveBasket(basket){
-    localStorage.setItem("basket" , basket);
+    localStorage.setItem("basket" , JSON.stringify(basket));
 }
 
 function getBasket() {
@@ -52,11 +54,36 @@ function getBasket() {
 function addBasket(product){
     let basket = getBasket()
     basket.push(product)
-    
+    let foundProduct = basket.find(p => p.id == product.id)
+        if (foundProduct != undefined){
+            foundProduct.quantity++
+        }else{
+            product.quantity = 1;
+        }
+    saveBasket(basket);
 }
+let quantity = document.querySelector("#quantity").value;
+let button = document.querySelector("#addToCart");
+let color = document.querySelector("#colors").value;
+let dataProduct = {
+    id : id,
+    price : price,
+    color : color,
+    quantity : quantity
+}
+button.addEventListener("click" , event => {
+    if (quantity == null  || quantity < 1 || quantity > 100){
+        alert("Veuillez renseigner une quantité comprise entre 1 et 100")
+        saveBasket(dataProduct)
+        getBasket(dataProduct)
+        addBasket(dataProduct)
+    }
 
- 
+console.log(quantity)
+
+    
+
+})
    
 
-    
 
