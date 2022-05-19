@@ -43,7 +43,7 @@ function saveBasket(basket){
 }
 
 function getBasket() {
-    return localStorage.getItem("basket");
+    let basket = localStorage.getItem("basket");
     if (basket == null){
         return []
     }else{
@@ -60,26 +60,36 @@ function addBasket(product){
         }else{
             product.quantity = 1;
         }
-    saveBasket(basket);
+if (addBasket == true){
+    saveBasket(basket)
 }
-let quantity = document.querySelector("#quantity").value;
+}
+
 let button = document.querySelector("#addToCart");
-let color = document.querySelector("#colors").value;
-let dataProduct = {
-    id : id,
-    price : price,
-    color : color,
-    quantity : quantity
-}
+
+
 button.addEventListener("click" , event => {
+    let quantity = document.querySelector("#quantity").value;
+    let color = document.querySelector("#colors").value;
+    let name = document.querySelector("#title").textContent;
+    let price = document.querySelector("#price").textContent;
+    let dataProduct = [
+        {
+        name : name,
+        price : price,
+        color : color,
+        quantity : quantity
+    }]
+    console.log(name)
+    console.log(price)
+    console.log(quantity)
     if (quantity == null  || quantity < 1 || quantity > 100){
         alert("Veuillez renseigner une quantité comprise entre 1 et 100")
-        saveBasket(dataProduct)
-        getBasket(dataProduct)
-        addBasket(dataProduct)
+        
     }
+    saveBasket(dataProduct)
+    getBasket(dataProduct)
 
-console.log(quantity)
 
     
 
