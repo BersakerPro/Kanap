@@ -67,7 +67,7 @@ if (addBasket == true){
 
 let button = document.querySelector("#addToCart");
 
-
+if (button != null){  
 button.addEventListener("click" , event => {
     let quantity = document.querySelector("#quantity").value;
     let color = document.querySelector("#colors").value;
@@ -88,12 +88,9 @@ button.addEventListener("click" , event => {
         
     }
     saveBasket(dataProduct)
-    getBasket(dataProduct)
-
-
-    
-
+    addBasket(dataProduct)
+    console.log(dataProduct)
 })
-   
+}   
 
 
