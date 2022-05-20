@@ -1,7 +1,9 @@
+//Lien entre les pages index et produit
 var link =  window.location.href;
 var url = new URL(link);
 var id = url.searchParams.get("id");
 
+//récupération ID produit
 var fetchingUrl = `http://localhost:3000/api/products/${id}`;
 console.log(fetchingUrl);
 console.log(id);
@@ -73,13 +75,14 @@ button.addEventListener("click" , event => {
     let color = document.querySelector("#colors").value;
     let name = document.querySelector("#title").textContent;
     let price = document.querySelector("#price").textContent;
-    let dataProduct = [
+    let dataProduct =
         {
+        id : id,
         name : name,
         price : price,
         color : color,
         quantity : quantity
-    }]
+    }
     console.log(name)
     console.log(price)
     console.log(quantity)
