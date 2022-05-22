@@ -8,6 +8,7 @@ var fetchingUrl = `http://localhost:3000/api/products/${id}`;
 console.log(fetchingUrl);
 console.log(id);
 
+//Requête API d'un produit par son ID
 fetch (fetchingUrl)
 .then(function (response){
     console.log(response);
@@ -15,6 +16,7 @@ fetch (fetchingUrl)
     const productsData = response.json();
     console.log(productsData)
 
+    //Insertion des détails du produit dans la page
     productsData.then ((product) => {
 
         document.querySelector(".item__img").innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
@@ -39,50 +41,67 @@ fetch (fetchingUrl)
 })
 
 
-    
+//Fonction pour enregistrer le panier dans le localStorage    
 function saveBasket(basket){
+
+    //Sauvegarde des données en chaine de caractère
     localStorage.setItem("basket" , JSON.stringify(basket));
 }
 
+//Fonction de récupération des données dans le localStorage
 function getBasket() {
-    let basket = localStorage.getItem("basket");
-    if (basket == null){
-        return []
-    }else{
-        return JSON.parse(basket)
+    if(localStorage.getItem("basket")) {
+
+        //Récupération des chaine de caractère en tableau
+        return JSON.parse(localStorage.getItem("basket"));
+    }else {
+        return[];
     }
 }
 
+//Fonction d'ajout au panier
 function addBasket(product){
-    let basket = getBasket()
-    basket.push(product)
-    let foundProduct = basket.find(p => p.id == product.id)
-        if (foundProduct != undefined){
-            foundProduct.quantity++
-        }else{
-            product.quantity = 1;
+    let basket = getBasket();
+
+
+    //Variable témoin de présence
+    let foundProduct = false;
+
+    //Boucle de vérif id et couleur
+    for (const row of basket) {
+        if (row.name === product[0].name && row.color === product[0].color) {
+            alert("Produit déjà présent dans le panier, dans la même couleur");
+            console.log(row.quantity);
+
+            let qty = parseInt(quantity.value);
+            console.log(qty)
+
+            row.quantity += qty;
+
+            foundProduct = true
         }
-if (addBasket == true){
+    }
+    basket.push(product);
+    console.log(foundProduct)
     saveBasket(basket)
-}
 }
 
 let button = document.querySelector("#addToCart");
 
-if (button != null){  
+
 button.addEventListener("click" , event => {
     let quantity = document.querySelector("#quantity").value;
     let color = document.querySelector("#colors").value;
     let name = document.querySelector("#title").textContent;
     let price = document.querySelector("#price").textContent;
-    let dataProduct =
+    let dataProduct = [ 
         {
         id : id,
         name : name,
         price : price,
         color : color,
         quantity : quantity
-    }
+    }]
     console.log(name)
     console.log(price)
     console.log(quantity)
@@ -90,10 +109,16 @@ button.addEventListener("click" , event => {
         alert("Veuillez renseigner une quantité comprise entre 1 et 100")
         
     }
+    else if(color == ""){
+        alert("Veuillez renseigner une couleur")
+    }
     saveBasket(dataProduct)
+    getBasket(dataProduct)
     addBasket(dataProduct)
+
+    
     console.log(dataProduct)
 })
-}   
+ 
 
 
