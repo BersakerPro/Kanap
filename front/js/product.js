@@ -69,7 +69,7 @@ function addBasket(product){
 
     //Boucle de vérif id et couleur
     for (const row of basket) {
-        if (row.name === product[0].name && row.color === product[0].color) {
+        if (row.name == product.name && row.color == product.color) {
             alert("Produit déjà présent dans le panier, dans la même couleur");
             console.log(row.quantity);
 
@@ -79,29 +79,32 @@ function addBasket(product){
             row.quantity += qty;
 
             foundProduct = true
+
         }
-    }
+        
+    } 
     basket.push(product);
     console.log(foundProduct)
     saveBasket(basket)
+    
 }
 
 let button = document.querySelector("#addToCart");
 
 
 button.addEventListener("click" , event => {
-    let quantity = document.querySelector("#quantity").value;
+    let quantity = parseInt(document.querySelector("#quantity").value);
     let color = document.querySelector("#colors").value;
     let name = document.querySelector("#title").textContent;
     let price = document.querySelector("#price").textContent;
-    let dataProduct = [ 
+    let dataProduct =
         {
         id : id,
         name : name,
         price : price,
         color : color,
         quantity : quantity
-    }]
+    }
     console.log(name)
     console.log(price)
     console.log(quantity)
@@ -112,7 +115,6 @@ button.addEventListener("click" , event => {
     else if(color == ""){
         alert("Veuillez renseigner une couleur")
     }
-    saveBasket(dataProduct)
     getBasket(dataProduct)
     addBasket(dataProduct)
 
