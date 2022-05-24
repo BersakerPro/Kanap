@@ -69,7 +69,20 @@ if (basketProduct === null || basketProduct.lenght == 0) {
                 //Création de la balise div settings
                 let cart__item__content__settings = document.createElement("div");
                 cart__item__content.appendChild(cart__item__content__settings);
-                cart__item__content__settings.classList.add("cart__item__content__settings")
+                cart__item__content__settings.classList.add("cart__item__content__settings");
+
+                let cart__item__content__settings__quantity = document.createElement("div");
+                cart__item__content__settings.appendChild(cart__item__content__settings__quantity);
+                cart__item__content__settings__quantity.classList.add("cart__item__content__settings__quantity");
+
+                let qtyText = document.createElement("p");
+                cart__item__content__settings__quantity.appendChild(qtyText);
+                qtyText.textContent = "Qté : ";
+
+                let itemQuantity = document.createElement("input");
+                cart__item__content__settings__quantity.appendChild(itemQuantity);
+                itemQuantity.classList.add("itemQuantity");
+
             
             })    
         }
