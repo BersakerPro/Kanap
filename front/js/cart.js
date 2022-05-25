@@ -53,6 +53,8 @@ if (basketProduct === null || basketProduct.lenght == 0) {
                 cart__item__content.appendChild(cart__item__content__description);
                 cart__item__content__description.classList.add("cart__item__content__description");
 
+                let totalPriceProduct = detail.price * detail.quantity;
+
                 let cart__item__content__description__name = document.createElement("h2");
                 let cart__item__content__description__price = document.createElement("p");
                 let cart__item__content__description__color = document.createElement("p");
@@ -64,7 +66,7 @@ if (basketProduct === null || basketProduct.lenght == 0) {
                 cart__item__content__description__name.textContent = detail.name;
                 cart__item__content__description__color.textContent = detail.color;
                 cart__item__content__description__price.textContent = Intl.NumberFormat("fr-FR", {
-                    style:"currency", currency: "EUR",}).format(detail.price);
+                    style:"currency", currency: "EUR",}).format(totalPriceProduct);
 
                 //Création de la balise div settings
                 let cart__item__content__settings = document.createElement("div");
@@ -82,9 +84,30 @@ if (basketProduct === null || basketProduct.lenght == 0) {
                 let itemQuantity = document.createElement("input");
                 cart__item__content__settings__quantity.appendChild(itemQuantity);
                 itemQuantity.classList.add("itemQuantity");
+                itemQuantity.setAttribute("name" , "itemQuantity");
+                itemQuantity.setAttribute("type" , "number");
+                itemQuantity.setAttribute("value" , detail.quantity);
 
-            
+                let cart__item__content__settings__delete = document.createElement("div")
+                cart__item__content__settings.appendChild(cart__item__content__settings__delete);
+                cart__item__content__settings__delete.classList.add("cart__item__content__settings__delete");
+
+                let deleteText = document.createElement("p");
+                cart__item__content__settings__delete.appendChild(deleteText);
+                deleteText.classList.add("deleteText");
+                deleteText.textContent = "Supprimer" ;           
             })    
-        }
-    
+        }   
 }
+
+let productCart = document.querySelectorAll(".cart__item");
+let productQuantity = document.getElementsByClassName(".itemQuantity");
+
+for (let qty of productCart) {
+    console.log("vroum")
+    productQuantity.addEventListener ("change" , (e) => {
+        basket.quantity = parseInt(e.target.value);
+        localStorage.setItem("basket" , JSON.stringify(basketProduct));
+    })
+}
+
