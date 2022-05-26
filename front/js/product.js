@@ -60,35 +60,50 @@ function getBasket() {
     return getArray;
 }
 
-//Fonction d'ajout au panier
-function addBasket(product){
+//Fonction de vérification du contenu du panier
+function verifBasket(basket){
+    let basket = getBasket();
+    if(basket.length == 0) {
+        return true;
+    } else {
+        for (const row of basket) {
+            if (row.id == product.id && row.color == product.color) {
+                alert("Produit déjà présent dans le panier, dans la même couleur");
+                return false;
+            }
+            
+        }
+    }
+}
+
+//Fonctions d'ajout au panier
+
+//Fonction panier vide
+function addBasketEmpty(product){
     let basket = getBasket();
     console.log(basket)
-    console.log(basket[0].id)
 
     //Ajout du produit au localStorage
     basket.push(product);
-    console.log(foundProduct)
     saveBasket(basket)
-
 }
 
+//Fonction panier contenant un produit identique
+function addSameProduct(product){
+    let basket = getBasket();
+
+    for(const row of basket){
+
+        let qty = parseInt(quantity.value);
+        row.quantity += qty;
+    }
+    localStorage.removeItem(basket)
+    basket.push(product)
+    saveBasket(product)
+}
    
   
-function verifBasket(product){
-        let basket = getBasket();
-        if(basket.length == 0) {
-            return true;
-        } else {
-            for (const row of basket) {
-                if (row.id == product.id && row.color == product.color) {
-                    alert("Produit déjà présent dans le panier, dans la même couleur");
-                    return false;
-                }
-                
-            }
-        }
-    }
+
     
 
     
@@ -124,11 +139,16 @@ button.addEventListener("click" , event => {
     //Message d'alerte si la couleur n'est pas renseigné
     else if(color == ""){
         alert("Veuillez renseigner une couleur")
-    }
-    getBasket(dataProduct)
-    addBasket(dataProduct)
 
-    
-    console.log(dataProduct)
+    }
+    if(verifBasket(basket)){
+        addBasketEmpty(dataProduct);
+        saveBasket(dataProduct)
+    }
+    else{
+        addSameProduct(dataProduct)
+    }
+
+
 })
  
