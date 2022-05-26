@@ -65,6 +65,7 @@ function addBasket(product){
 
 
     //Variable témoin de présence
+        //Le témoin renvoie false si un produit identique n'est pas présent
     let foundProduct = false;
 
     //Boucle de vérif id et couleur
@@ -73,16 +74,21 @@ function addBasket(product){
             alert("Produit déjà présent dans le panier, dans la même couleur");
             console.log(row.quantity);
 
+            //récupération des données quantity en valeur numérique
             let qty = parseInt(quantity.value);
             console.log(qty)
 
+            //Ajout de la valeur qty à la valeur initial du produit déjà présent
             row.quantity += qty;
 
+            //Le témoin renvoie true quand les conditions sont réunis(produit identique présent dans le panier)
             foundProduct = true
 
         }
         
-    } 
+    }
+    
+    //Ajout du produit au localStorage
     basket.push(product);
     console.log(foundProduct)
     saveBasket(basket)
@@ -91,12 +97,14 @@ function addBasket(product){
 
 let button = document.querySelector("#addToCart");
 
-
+//Déclaration de l'évènement "ajouter au panier"
 button.addEventListener("click" , event => {
     let quantity = parseInt(document.querySelector("#quantity").value);
     let color = document.querySelector("#colors").value;
     let name = document.querySelector("#title").textContent;
     let price = document.querySelector("#price").textContent;
+
+    //Variable des détail du produit ajouté au panier
     let dataProduct =
         {
         id : id,
@@ -108,10 +116,13 @@ button.addEventListener("click" , event => {
     console.log(name)
     console.log(price)
     console.log(quantity)
+
+    //Message d'alerte si la quantité n'est pas comprise entre 1 et 100
     if (quantity == null  || quantity < 1 || quantity > 100){
         alert("Veuillez renseigner une quantité comprise entre 1 et 100")
         
     }
+    //Message d'alerte si la couleur n'est pas renseigné
     else if(color == ""){
         alert("Veuillez renseigner une couleur")
     }

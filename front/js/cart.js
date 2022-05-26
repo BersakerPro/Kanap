@@ -1,3 +1,4 @@
+//Récupération du panier via le localStorage
 function getBasket() {
     let basket = localStorage.getItem("basket");
     return JSON.parse(basket)
@@ -6,15 +7,19 @@ function getBasket() {
 let basketProduct = getBasket();
 console.log(basketProduct)
 
+
+//Déclaration d'un panier vide si le localStorage est vide
 if (basketProduct === null || basketProduct.lenght == 0) {
     document.querySelector("#cart__items").insertAdjacentHTML("afterend" , `<div class="cart__item__img">
         <p>Votre panier est vide</p>
     </div>`);
+
+//Si le localStorage contient des élément:
 }else{
 
     let cart__items = document.getElementById("cart__items");
 
-    
+    //Boucle pour parcourir l'array du localStorage
     for (let detail of basketProduct){
 
         let fetchingCurrent = `http://localhost:3000/api/products/` + detail.id;
