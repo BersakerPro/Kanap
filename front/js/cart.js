@@ -109,7 +109,7 @@ let productCart = document.querySelectorAll(".cart__item");
 let productQuantity = document.getElementsByClassName(".itemQuantity");
 
 for (let qty of productCart) {
-    console.log("vroum")
+    console.log("test")
     productQuantity.addEventListener ("change" , (e) => {
         basket.quantity = parseInt(e.target.value);
         localStorage.setItem("basket" , JSON.stringify(basketProduct));

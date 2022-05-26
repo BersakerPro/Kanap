@@ -50,50 +50,49 @@ function saveBasket(basket){
 
 //Fonction de récupération des données dans le localStorage
 function getBasket() {
+    let getArray = []
     if(localStorage.getItem("basket")) {
 
         //Récupération des chaine de caractère en tableau
-        return JSON.parse(localStorage.getItem("basket"));
-    }else {
-        return[];
+        let getBasket = JSON.parse(localStorage.getItem("basket"));
+        getArray.push(getBasket);    
     }
+    return getArray;
 }
 
 //Fonction d'ajout au panier
 function addBasket(product){
     let basket = getBasket();
+    console.log(basket)
+    console.log(basket[0].id)
 
-
-    //Variable témoin de présence
-        //Le témoin renvoie false si un produit identique n'est pas présent
-    let foundProduct = false;
-
-    //Boucle de vérif id et couleur
-    for (const row of basket) {
-        if (row.name == product.name && row.color == product.color) {
-            alert("Produit déjà présent dans le panier, dans la même couleur");
-            console.log(row.quantity);
-
-            //récupération des données quantity en valeur numérique
-            let qty = parseInt(quantity.value);
-            console.log(qty)
-
-            //Ajout de la valeur qty à la valeur initial du produit déjà présent
-            row.quantity += qty;
-
-            //Le témoin renvoie true quand les conditions sont réunis(produit identique présent dans le panier)
-            foundProduct = true
-
-        }
-        
-    }
-    
     //Ajout du produit au localStorage
     basket.push(product);
     console.log(foundProduct)
     saveBasket(basket)
-    
+
 }
+
+   
+  
+function verifBasket(product){
+        let basket = getBasket();
+        if(basket.length == 0) {
+            return true;
+        } else {
+            for (const row of basket) {
+                if (row.id == product.id && row.color == product.color) {
+                    alert("Produit déjà présent dans le panier, dans la même couleur");
+                    return false;
+                }
+                
+            }
+        }
+    }
+    
+
+    
+
 
 let button = document.querySelector("#addToCart");
 
@@ -105,7 +104,7 @@ button.addEventListener("click" , event => {
     let price = document.querySelector("#price").textContent;
 
     //Variable des détail du produit ajouté au panier
-    let dataProduct =
+    let dataProduct = 
         {
         id : id,
         name : name,
@@ -133,5 +132,3 @@ button.addEventListener("click" , event => {
     console.log(dataProduct)
 })
  
-
-
