@@ -47,7 +47,7 @@ if (basketProduct === null || basketProduct.lenght == 0) {
                 let img = document.createElement("img");
                 cart__item__img.appendChild(img);
                 img.src = product.imageUrl;
-                img.alt = product.altTxt
+                img.alt = product.altTxt;
 
                 //création de la balise div description du produit
                 let cart__item__content = document.createElement("div");
