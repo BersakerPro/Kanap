@@ -61,13 +61,16 @@ function getBasket() {
 }
 
 //Fonction de vérification du contenu du panier
-function verifBasket(basket){
+function verifBasket(){
     let basket = getBasket();
     if(basket.length == 0) {
         return true;
     } else {
-        for (const row of basket) {
-            if (row.id == product.id && row.color == product.color) {
+        for (let row of basket) {
+            console.log(basket)
+            console.log(basket[0].id)
+            console.log(row.id)
+            if (row.id == basket[0].id && row.color == basket[0].color) {
                 alert("Produit déjà présent dans le panier, dans la même couleur");
                 return false;
             }
@@ -84,7 +87,7 @@ function addBasketEmpty(product){
     console.log(basket)
 
     //Ajout du produit au localStorage
-    basket.push(product);
+    basket.push(product)
     saveBasket(basket)
 }
 
@@ -95,9 +98,12 @@ function addSameProduct(product){
     for(const row of basket){
 
         let qty = parseInt(quantity.value);
+        console.log(qty)
+        console.log(row.quantity)
         row.quantity += qty;
     }
-    localStorage.removeItem(basket)
+    
+
     basket.push(product)
     saveBasket(product)
 }
@@ -141,14 +147,12 @@ button.addEventListener("click" , event => {
         alert("Veuillez renseigner une couleur")
 
     }
-    if(verifBasket(basket)){
+    if(verifBasket()){
         addBasketEmpty(dataProduct);
-        saveBasket(dataProduct)
     }
     else{
         addSameProduct(dataProduct)
     }
-
 
 })
  

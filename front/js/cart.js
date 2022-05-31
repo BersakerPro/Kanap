@@ -1,8 +1,52 @@
+function saveBasket(basket){
+
+    //Sauvegarde des données en chaine de caractère
+    localStorage.setItem("basket" , JSON.stringify(basket));
+}
+
 //Récupération du panier via le localStorage
 function getBasket() {
-    let basket = localStorage.getItem("basket");
-    return JSON.parse(basket)
+    let getArray = []
+    if(localStorage.getItem("basket")) {
+
+        //Récupération des chaine de caractère en tableau
+        let getBasket = JSON.parse(localStorage.getItem("basket"));
+        getArray.push(getBasket);    
+    }
+    return getArray;
 }
+
+
+function clickQtyBtn() {
+    let qtyBtn = document.getElementsByClassName("itemQuantity");
+    console.log(qtyBtn);
+    for (const row of qtyBtn) {
+        console.log(row);
+        row.addEventListener("change", (e) => {
+            console.log(e);
+            alert(e.target.value);
+        });
+    }
+}
+function deleteProduct(){ 
+    let deleteBtn = document.querySelectorAll('#deleteItem');
+    console.log(deleteBtn);
+    
+    for(let btn of deleteBtn){
+        btn.addEventListener('click', (e) =>{
+            console.log(btn)
+            let idDelete = detail.id;
+            let colorDelete = detail.color;
+    
+            basketProduct = basketProduct.filter(p => p.id !== idDelete || p.color !== colorDelete)
+    
+            alert("Produit supprimé du panier");
+            saveBasket()
+        })
+    }
+    }
+
+
 
 let basketProduct = getBasket();
 console.log(basketProduct)
@@ -98,21 +142,15 @@ if (basketProduct === null || basketProduct.lenght == 0) {
                 cart__item__content__settings__delete.classList.add("cart__item__content__settings__delete");
 
                 let deleteText = document.createElement("p");
-                cart__item__content__settings__delete.appendChild(deleteText);
-                deleteText.classList.add("deleteText");
-                deleteText.textContent = "Supprimer" ;           
+                cart__item__content__settings__delete.append(deleteText);
+                deleteText.classList.add("deleteItem");
+                deleteText.textContent = "Supprimer" ;   
+                
+                
+                clickQtyBtn();
+
+                deleteProduct();
             })    
         }   
-}
-
-let productCart = document.querySelectorAll(".cart__item");
-let productQuantity = document.getElementsByClassName(".itemQuantity");
-
-for (let qty of productCart) {
-    console.log("test")
-    productQuantity.addEventListener ("change" , (e) => {
-        basket.quantity = parseInt(e.target.value);
-        localStorage.setItem("basket" , JSON.stringify(basketProduct));
-    })
 }
 

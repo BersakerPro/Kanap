@@ -21,7 +21,7 @@ fetch("http://localhost:3000/api/products/")
 
           let idLink = document.createElement ("a");
           items.append(idLink);
-          idLink.setAttribute("href" , "./product.html?id=${product._id}");
+          idLink.setAttribute("href" , `./product.html?id=${product._id}`);
           console.log(idLink);
 
           let articleItems = document.createElement("article")
