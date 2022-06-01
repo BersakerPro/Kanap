@@ -25,6 +25,7 @@ function clickQtyBtn() {
         row.addEventListener("change", (e) => {
             console.log(e);
             alert(e.target.value);
+            
         });
     }
 }
@@ -33,7 +34,7 @@ function deleteProduct(){
     console.log(deleteBtn);
     
     for(let btn of deleteBtn){
-        btn.addEventListener('click', (e) =>{
+        deleteBtn.addEventListener('click', (e) =>{
             console.log(btn)
             let idDelete = detail.id;
             let colorDelete = detail.color;
@@ -53,7 +54,7 @@ console.log(basketProduct)
 
 
 //Déclaration d'un panier vide si le localStorage est vide
-if (basketProduct === null || basketProduct.lenght == 0) {
+if (basketProduct === null || basketProduct.length == 0) {
     document.querySelector("#cart__items").insertAdjacentHTML("afterend" , `<div class="cart__item__img">
         <p>Votre panier est vide</p>
     </div>`);
@@ -102,8 +103,6 @@ if (basketProduct === null || basketProduct.lenght == 0) {
                 cart__item__content.appendChild(cart__item__content__description);
                 cart__item__content__description.classList.add("cart__item__content__description");
 
-                let totalPriceProduct = detail.price * detail.quantity;
-
                 let cart__item__content__description__name = document.createElement("h2");
                 let cart__item__content__description__price = document.createElement("p");
                 let cart__item__content__description__color = document.createElement("p");
@@ -115,7 +114,7 @@ if (basketProduct === null || basketProduct.lenght == 0) {
                 cart__item__content__description__name.textContent = detail.name;
                 cart__item__content__description__color.textContent = detail.color;
                 cart__item__content__description__price.textContent = Intl.NumberFormat("fr-FR", {
-                    style:"currency", currency: "EUR",}).format(totalPriceProduct);
+                    style:"currency", currency: "EUR",}).format(detail.price);
 
                 //Création de la balise div settings
                 let cart__item__content__settings = document.createElement("div");
@@ -146,8 +145,22 @@ if (basketProduct === null || basketProduct.lenght == 0) {
                 deleteText.classList.add("deleteItem");
                 deleteText.textContent = "Supprimer" ;   
                 
-                
+
                 clickQtyBtn();
+                function getNumberProduct(){
+                    let basket = getBasket();
+                    let number = 0;
+                    for(let product of basket){
+                        number += detail.quantity;
+                    }
+                    console.log(number)
+                    return number
+                }
+                
+                let totalQuantity = document.getElementById("totalQuantity");
+                totalQuantity.textContent = getNumberProduct();
+                
+                
 
                 deleteProduct();
             })    
