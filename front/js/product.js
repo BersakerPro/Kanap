@@ -48,73 +48,61 @@ function saveBasket(basket){
     localStorage.setItem("basket" , JSON.stringify(basket));
 }
 
-//Fonction de récupération des données dans le localStorage
-function getBasket() {
-    let getArray = []
-    if(localStorage.getItem("basket")) {
-
-        //Récupération des chaine de caractère en tableau
-        let getBasket = JSON.parse(localStorage.getItem("basket"));
-        getArray.push(getBasket);    
+function getBasket(){
+    if(localStorage.getItem("basket")==null){
+        return[]
+    }else{
+        return JSON.parse(localStorage.getItem("basket"));
     }
-    return getArray;
 }
 
-//Fonction de vérification du contenu du panier
-function verifBasket(){
-    let basket = getBasket();
-    if(basket.length == 0) {
-        return true;
-    } else {
-        for (let row of basket) {
+function checkPanierStorage(id, color){
+    let basket = getBasket()
+    if(basket.length == 0){
+        return false;
+    }else{
+        for(let row of basket){
+            console.log(row)
             console.log(basket)
-            console.log(basket[0].id)
-            console.log(row.id)
-            if (row.id == basket[0].id && row.color == basket[0].color) {
-                alert("Produit déjà présent dans le panier, dans la même couleur");
-                return false;
+            if(row.id == id && row.color == color){
+                alert("Produit déjà présent dans le panier, dans la même couleur")
+                return true 
             }
-            
+        }
+    return false;
+    }
+}
+
+function majQuantity(product){
+    let basket = getBasket();
+
+    for(let row of basket){
+        if(product.id == row.id && product.color == row.color){
+            row.quantity += product.quantity;
         }
     }
-}
-
-//Fonctions d'ajout au panier
-
-//Fonction panier vide
-function addBasketEmpty(product){
-    let basket = getBasket();
-    console.log(basket)
-
-    //Ajout du produit au localStorage
-    basket.push(product)
     saveBasket(basket)
 }
 
-//Fonction panier contenant un produit identique
-function addSameProduct(product){
+function addNewProduct(product){
     let basket = getBasket();
-
-    for(const row of basket){
-
-        let qty = parseInt(quantity.value);
-        console.log(qty)
-        console.log(row.quantity)
-        row.quantity += qty;
-    }
-    
-
     basket.push(product)
-    saveBasket(product)
+    console.log(basket)
+
+    saveBasket(basket)
 }
-   
+
   
-
+function addProduct(product){
     
-
-    
-
-
+    if(checkPanierStorage(product.id , product.color)){
+        majQuantity(product)
+        
+    }else{
+        addNewProduct(product)
+        
+    }
+}
 let button = document.querySelector("#addToCart");
 
 //Déclaration de l'évènement "ajouter au panier"
@@ -133,10 +121,6 @@ button.addEventListener("click" , event => {
         color : color,
         quantity : quantity
     }
-    console.log(name)
-    console.log(price)
-    console.log(quantity)
-
     //Message d'alerte si la quantité n'est pas comprise entre 1 et 100
     if (quantity == null  || quantity < 1 || quantity > 100){
         alert("Veuillez renseigner une quantité comprise entre 1 et 100")
@@ -146,13 +130,9 @@ button.addEventListener("click" , event => {
     else if(color == ""){
         alert("Veuillez renseigner une couleur")
 
-    }
-    if(verifBasket()){
-        addBasketEmpty(dataProduct);
-    }
-    else{
-        addSameProduct(dataProduct)
-    }
-
+    }else{
+        addProduct(dataProduct);
+        console.log(dataProduct)
+        }   
 })
  

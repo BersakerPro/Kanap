@@ -5,30 +5,16 @@ function saveBasket(basket){
 }
 
 //Récupération du panier via le localStorage
-function getBasket() {
-    let getArray = []
-    if(localStorage.getItem("basket")) {
-
-        //Récupération des chaine de caractère en tableau
-        let getBasket = JSON.parse(localStorage.getItem("basket"));
-        getArray.push(getBasket);    
-    }
-    return getArray;
-}
-
-
-function clickQtyBtn() {
-    let qtyBtn = document.getElementsByClassName("itemQuantity");
-    console.log(qtyBtn);
-    for (const row of qtyBtn) {
-        console.log(row);
-        row.addEventListener("change", (e) => {
-            console.log(e);
-            alert(e.target.value);
-            
-        });
+function getBasket(){
+    if(localStorage.getItem("basket")==null){
+        return[]
+    }else{
+        return JSON.parse(localStorage.getItem("basket"));
     }
 }
+
+
+
 function deleteProduct(){ 
     let deleteBtn = document.querySelectorAll('#deleteItem');
     console.log(deleteBtn);
@@ -42,6 +28,7 @@ function deleteProduct(){
             basketProduct = basketProduct.filter(p => p.id !== idDelete || p.color !== colorDelete)
     
             alert("Produit supprimé du panier");
+
             saveBasket()
         })
     }
@@ -145,8 +132,21 @@ if (basketProduct === null || basketProduct.length == 0) {
                 deleteText.classList.add("deleteItem");
                 deleteText.textContent = "Supprimer" ;   
                 
-
+                function clickQtyBtn() {
+                    let qtyBtn = document.getElementsByClassName("itemQuantity");
+                    console.log(qtyBtn);
+                    for (const row of qtyBtn) {
+                        console.log(row);
+                        row.addEventListener("change", (e) => {
+                            console.log(e);
+                            alert(e.target.value);
+                            console.log(detail.quantity)
+                            detail.quantity = parseInt(e.target.value);      
+                        });
+                    }
+                }
                 clickQtyBtn();
+
                 function getNumberProduct(){
                     let basket = getBasket();
                     let number = 0;
