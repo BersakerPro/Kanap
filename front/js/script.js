@@ -42,9 +42,6 @@ fetch("http://localhost:3000/api/products/")
           articleItems.append(img , productName , productDescription);
 
         }
-
-       
-
     })
 })
 

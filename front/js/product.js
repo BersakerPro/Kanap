@@ -48,42 +48,58 @@ function saveBasket(basket){
     localStorage.setItem("basket" , JSON.stringify(basket));
 }
 
+//Fonction de récupération des données dans le localStorage
 function getBasket(){
+    //Si le panier est vide, retourne un tableau vide
     if(localStorage.getItem("basket")==null){
         return[]
     }else{
+        //Sinon, récupère les données en objet
         return JSON.parse(localStorage.getItem("basket"));
     }
 }
 
+//Fonction de vérification du contenu du panier
 function checkPanierStorage(id, color){
     let basket = getBasket()
+    //Si le panier est vide, retourne false
     if(basket.length == 0){
         return false;
     }else{
+        //Sinon, on boucle dans le contenu du panier
         for(let row of basket){
             console.log(row)
             console.log(basket)
+            //Si l'id et la couleur du produit ajouté sont les même qu'un produit déjà présent
             if(row.id == id && row.color == color){
+                //Alerte pour l'utilisateur
                 alert("Produit déjà présent dans le panier, dans la même couleur")
+                //Retourne true
                 return true 
             }
         }
+    //Si les conditions de la boucle ne sont pas remplies mais que le panier n'est pas vide
+    //Retourne false
     return false;
     }
 }
 
+//Fonction de modification de la quantité d'un produit identique déjà présent dans le panier
 function majQuantity(product){
     let basket = getBasket();
 
+    //On boucle dans le panier
     for(let row of basket){
+        //Si l'id et la couleur du produit ajouté sont les même que celui déjà présent
         if(product.id == row.id && product.color == row.color){
+            //On ajoute la quantité du produit ajouté à celle de celui déjà présent
             row.quantity += product.quantity;
         }
     }
     saveBasket(basket)
 }
 
+//Fonction d'ajout d'un nouveau produit au panier
 function addNewProduct(product){
     let basket = getBasket();
     basket.push(product)
@@ -92,13 +108,16 @@ function addNewProduct(product){
     saveBasket(basket)
 }
 
-  
+//Fonction d'ajout au panier au déclenchement de l'évènement
 function addProduct(product){
-    
+    //Si la fonction de vérification du panier retourne true
     if(checkPanierStorage(product.id , product.color)){
+        //On déclare la fonction de modification de la quantité
         majQuantity(product)
         
     }else{
+        //Si la fonction de vérification retourne true
+        //On déclare la fonction d'ajout d'un nouveau produit
         addNewProduct(product)
         
     }
