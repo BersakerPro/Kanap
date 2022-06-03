@@ -61,26 +61,26 @@ function getBasket(){
 
 //Fonction de vérification du contenu du panier
 function checkPanierStorage(id, color){
-    let basket = getBasket()
+    let products = getBasket();
     //Si le panier est vide, retourne false
-    if(basket.length == 0){
+    if(products.length == 0){
         return false;
-    }else{
+    } else {
         //Sinon, on boucle dans le contenu du panier
-        for(let row of basket){
-            console.log(row)
-            console.log(basket)
+        for(let product of products){
+            console.log(product)
+            console.log(products)
             //Si l'id et la couleur du produit ajouté sont les même qu'un produit déjà présent
-            if(row.id == id && row.color == color){
+            if(product.id == id && product.color == color){
                 //Alerte pour l'utilisateur
                 alert("Produit déjà présent dans le panier, dans la même couleur")
                 //Retourne true
                 return true 
             }
         }
-    //Si les conditions de la boucle ne sont pas remplies mais que le panier n'est pas vide
-    //Retourne false
-    return false;
+        //Si les conditions de la boucle ne sont pas remplies mais que le panier n'est pas vide
+        //Retourne false
+        return false;
     }
 }
 
@@ -136,7 +136,6 @@ button.addEventListener("click" , event => {
         {
         id : id,
         name : name,
-        price : price,
         color : color,
         quantity : quantity
     }
@@ -150,6 +149,7 @@ button.addEventListener("click" , event => {
         alert("Veuillez renseigner une couleur")
 
     }else{
+        //Sinon on déclare la fonction d'ajout au panier
         addProduct(dataProduct);
         console.log(dataProduct)
         }   
