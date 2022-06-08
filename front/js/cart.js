@@ -131,6 +131,7 @@ const getProductData = async () => {
     const resultat = await fetch (fetchingCurrent);
     productData = await resultat.JSON()
 
+    let basketProduct = getBasket();
     //Déclaration d'un panier vide si le localStorage est vide
     if (basketProduct === null || basketProduct.length == 0) {
     document.querySelector("#cart__items").insertAdjacentHTML("afterend" , `<div class="cart__item__img">
@@ -140,7 +141,7 @@ const getProductData = async () => {
     //Si le localStorage contient des élément:
     } else {
 
-        for(let detail of productData){
+        for(let i=0; i < basketProduct.lengty; i++){
 
             fillHtml();
         }           
