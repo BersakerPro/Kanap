@@ -36,7 +36,7 @@ function getTotalPrice(){
     let totalPriceProduct = 0;
     let totalPrice = 0
     for(let product of products){
-        totalPriceProduct += product.quantity * product.price;
+        totalPriceProduct = product.quantity * product.price;
 
         totalPrice += totalPriceProduct;
 
@@ -44,7 +44,7 @@ function getTotalPrice(){
     return totalPrice
 }
 
-function fillHtml(){
+function fillHtml(detail, product){
 
     let cart__items = document.getElementById("cart__items");
     //Création de la balise article cart__item
@@ -124,14 +124,17 @@ function fillHtml(){
     
 
 const getProductData = async () => {
+
+    let basketProduct = getBasket();
     
+    for (let detail of basketProduct){ 
     let fetchingCurrent = `http://localhost:3000/api/products/` + detail.id;
     console.log(fetchingCurrent)
     
     const resultat = await fetch (fetchingCurrent);
-    productData = await resultat.JSON()
+    productData = await resultat.json()
 
-    let basketProduct = getBasket();
+    
     //Déclaration d'un panier vide si le localStorage est vide
     if (basketProduct === null || basketProduct.length == 0) {
     document.querySelector("#cart__items").insertAdjacentHTML("afterend" , `<div class="cart__item__img">
@@ -140,13 +143,9 @@ const getProductData = async () => {
 
     //Si le localStorage contient des élément:
     } else {
-
-        for(let i=0; i < basketProduct.lengty; i++){
-
-            fillHtml();
-        }           
-    } 
-}
+        fillHtml(detail , productData)       
+    }
+}}
 getProductData();
 
 
