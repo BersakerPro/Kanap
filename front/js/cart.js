@@ -1,4 +1,8 @@
+function saveBasket(basket) {
 
+    //Sauvegarde des données en chaine de caractère
+    localStorage.setItem("basket", JSON.stringify(basket));
+}
 //Récupération du panier via le localStorage
 function getBasket(){
     if(localStorage.getItem("basket")==null){
@@ -9,50 +13,53 @@ function getBasket(){
 }
 
 function clickQtyBtn() {
+    let basket = getBasket()
     let qtyBtn = document.getElementsByClassName("itemQuantity");
     console.log(qtyBtn);
-    console.log(qtyBtn.length)
     for (const row of qtyBtn) {
         console.log(row);
         row.addEventListener("change", (e) => {
-            console.log(e)
-            alert(e.target.value);       
+            console.log(e);
+            alert(e.target.value);
+            e.target.setAttribute("value" , e.target.value)
+            console.log(row)
+            getNumberProduct()
         });
     }
+    saveBasket(basket)
 }
-
 function getNumberProduct(){
-    let basket = getBasket();
-    let number = 0;
-    for(let row of basket){
-        number += row.quantity;
+    let itemQuantity = document.getElementsByClassName("itemQuantity");
+    totalQuantity = 0
+    for (let i = 0 ; i < itemQuantity.length ; i++) {
+        totalQuantity += itemQuantity[i].valueAsNumber;
+        console.log(totalQuantity)
     }
-    console.log(number)
-    return number
+    let totalProductsQuantity = document.getElementById("totalQuantity");
+    totalProductsQuantity.textContent = totalQuantity;
 }
 
 function getTotalPrice(){
-    let products  = getBasket();
-    let totalPriceProduct = 0;
-    let totalPrice = 0
-    for(let product of products){
-        totalPriceProduct = product.quantity * product.price;
+    let products = getBasket()
 
-        totalPrice += totalPriceProduct;
 
+    for (let i=0 ; i<products.length ; i++) {
+        console.log(products[i].quantity)
     }
-    return totalPrice
+
+    let totalPriceContent = document.getElementById("totalPrice");
+    totalPriceContent.textContent = totalPrice;
 }
 
-function fillHtml(detail, product){
+function fillHtml(data, product){
 
     let cart__items = document.getElementById("cart__items");
     //Création de la balise article cart__item
     let cart__item = document.createElement ("article");
     cart__items.appendChild(cart__item);
     cart__item.classList.add("cart__item");
-    cart__item.setAttribute("data-id" , detail.id);
-    cart__item.setAttribute("data-color" , detail.color);
+    cart__item.setAttribute("data-id" , product.id);
+    cart__item.setAttribute("data-color" , product.color);
 
     //Création de la balise div contenant les images ds produits du panier
     let cart__item__img = document.createElement("div");
@@ -60,8 +67,8 @@ function fillHtml(detail, product){
     cart__item__img.classList.add("cart__item__img");
     let img = document.createElement("img");
     cart__item__img.appendChild(img);
-    img.src = product.imageUrl;
-    img.alt = product.altTxt;
+    img.src = data.imageUrl;
+    img.alt = data.altTxt;
 
     //création de la balise div description du produit
     let cart__item__content = document.createElement("div");
@@ -80,10 +87,10 @@ function fillHtml(detail, product){
         cart__item__content__description__color,
         cart__item__content__description__price
     );
-    cart__item__content__description__name.textContent = detail.name;
-    cart__item__content__description__color.textContent = detail.color;
+    cart__item__content__description__name.textContent = product.name;
+    cart__item__content__description__color.textContent = product.color;
     cart__item__content__description__price.textContent = Intl.NumberFormat("fr-FR", {
-        style:"currency", currency: "EUR",}).format(product.price);
+        style:"currency", currency: "EUR",}).format(data.price);
 
     //Création de la balise div settings
     let cart__item__content__settings = document.createElement("div");
@@ -103,7 +110,9 @@ function fillHtml(detail, product){
     itemQuantity.classList.add("itemQuantity");
     itemQuantity.setAttribute("name" , "itemQuantity");
     itemQuantity.setAttribute("type" , "number");
-    itemQuantity.setAttribute("value" , detail.quantity);
+    itemQuantity.setAttribute("value" , product.quantity);
+
+
 
     let cart__item__content__settings__delete = document.createElement("div")
     cart__item__content__settings.appendChild(cart__item__content__settings__delete);
@@ -112,41 +121,36 @@ function fillHtml(detail, product){
     let deleteText = document.createElement("p");
     cart__item__content__settings__delete.append(deleteText);
     deleteText.classList.add("deleteItem");
-    deleteText.textContent = "Supprimer" ;   
+    deleteText.textContent = "Supprimer" ; 
     
-    
-    let totalQuantity = document.getElementById("totalQuantity");
-    totalQuantity.textContent = getNumberProduct();
-
-    let totalPrice = document.getElementById("totalPrice");
-    totalPrice.textContent = getTotalPrice();
+   
 }
-    
 
-const getProductData = async () => {
 
-    let basketProduct = getBasket();
-    
-    for (let detail of basketProduct){ 
-    let fetchingCurrent = `http://localhost:3000/api/products/` + detail.id;
-    console.log(fetchingCurrent)
-    
-    const resultat = await fetch (fetchingCurrent);
-    productData = await resultat.json()
+async function initPage(basketProduct) {
 
-    
-    //Déclaration d'un panier vide si le localStorage est vide
-    if (basketProduct === null || basketProduct.length == 0) {
-    document.querySelector("#cart__items").insertAdjacentHTML("afterend" , `<div class="cart__item__img">
-        <p>Votre panier est vide</p>
-    </div>`);
-
-    //Si le localStorage contient des élément:
-    } else {
-        fillHtml(detail , productData)       
+    console.log(basketProduct)
+    for (product of basketProduct) {
+        console.log(product)
+        let promise = await fetch(`http://localhost:3000/api/products/${product.id}`)
+        let data = await promise.json();
+        if (promise.ok) {
+            console.log(data)
+            fillHtml(data, product)
+            getTotalPrice(data)        
+        } 
     }
-}}
-getProductData();
+    clickQtyBtn();
+    getNumberProduct()
+    
+
+}
+
+let basketProduct = getBasket()
+initPage(basketProduct)
+
+
+
 
 
 
