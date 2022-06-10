@@ -20,13 +20,25 @@ function clickQtyBtn() {
         console.log(row);
         row.addEventListener("change", (e) => {
             console.log(e);
+            let productId = e.composedPath()[4].dataset.id
+            console.log(productId)
+
+            for (product of basket) {
+                if(product.id == productId){
+                    product.quantity = parseInt(e.target.value)
+                }
+            }
             alert(e.target.value);
             e.target.setAttribute("value" , e.target.value)
             console.log(row)
             getNumberProduct()
+
+            saveBasket(basket)
+           
+            getTotalPrice()
+
         });
     }
-    saveBasket(basket)
 }
 function getNumberProduct(){
     let itemQuantity = document.getElementsByClassName("itemQuantity");
@@ -39,16 +51,37 @@ function getNumberProduct(){
     totalProductsQuantity.textContent = totalQuantity;
 }
 
-function getTotalPrice(){
+async function getTotalPrice(){
     let products = getBasket()
-
+    let totalPrice = 0
 
     for (let i=0 ; i<products.length ; i++) {
         console.log(products[i].quantity)
+        let product = await fetch (`http://localhost:3000/api/products/${products[i].id}`);
+        let productData = await product.json();
+        let price = productData.price
+
+        totalPrice += products[i].quantity * price
+
     }
 
     let totalPriceContent = document.getElementById("totalPrice");
     totalPriceContent.textContent = totalPrice;
+}
+
+function removeProductFromPanier(id) {
+
+    let idx = 0;
+    for (const row of panier) {
+        if (row.id == id) {
+            console.log("SUPPRESSION du panier : " + row.name);
+            alert("SUPPRESSION du panier : " + row.name);
+            panier.splice(idx, 1);
+            return true;
+        }
+        idx++;
+    }
+    return false;
 }
 
 function fillHtml(data, product){
@@ -136,12 +169,12 @@ async function initPage(basketProduct) {
         let data = await promise.json();
         if (promise.ok) {
             console.log(data)
-            fillHtml(data, product)
-            getTotalPrice(data)        
+            fillHtml(data, product)        
         } 
     }
     clickQtyBtn();
     getNumberProduct()
+    getTotalPrice()
     
 
 }
