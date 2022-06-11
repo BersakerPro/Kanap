@@ -69,20 +69,37 @@ async function getTotalPrice(){
     totalPriceContent.textContent = totalPrice;
 }
 
-function removeProductFromPanier(id) {
+function removeProductFromPanier() {
+    let deleteBtn = document.getElementsByClassName("deleteItem");
+    console.log(deleteBtn)
+    let products = getBasket()
 
-    let idx = 0;
-    for (const row of panier) {
-        if (row.id == id) {
-            console.log("SUPPRESSION du panier : " + row.name);
-            alert("SUPPRESSION du panier : " + row.name);
-            panier.splice(idx, 1);
-            return true;
-        }
-        idx++;
+    for (let i=0 ; i<deleteBtn.length ; i++) {
+        deleteBtn[i].addEventListener("click" , (e) => {
+            console.log(e)
+
+            console.log(products)
+            console.log(i)
+
+            products.splice(i , 1)
+            e.target.closest('article').remove();
+            alert("produit supprimé du panier")
+
+            saveBasket(products)
+            location.reload()
+        })
     }
-    return false;
+
 }
+function checkBasket() {
+    let basket = getBasket()
+    if(basket.length == 0 || basket == null){
+        return false
+    } else {
+        return true
+    }
+}
+
 
 function fillHtml(data, product){
 
@@ -175,12 +192,24 @@ async function initPage(basketProduct) {
     clickQtyBtn();
     getNumberProduct()
     getTotalPrice()
+
+    removeProductFromPanier()
     
 
 }
 
-let basketProduct = getBasket()
-initPage(basketProduct)
+
+if(checkBasket()){
+    
+    let basketProduct = getBasket()
+    initPage(basketProduct)
+
+} else {
+    document.querySelector("#cart__items").insertAdjacentHTML("afterend" , `<div style="text-align:center ; width:100%" class="cart__item__img">
+    <p>Votre panier est vide</p>
+</div>`);
+}
+
 
 
 
