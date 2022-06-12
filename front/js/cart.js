@@ -211,6 +211,108 @@ if(checkBasket()){
 }
 
 
+//GESTION DU FORMULAIRE
+
+let regExText = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");
+let regExMail = new RegExp("^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$");
+let regExAddress = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
+
+
+function checkTextOnly(value) {
+    if(regExText.test(value)) {
+        return false
+    }
+    return true
+}
+
+function checkAddress(value) {
+    if(regExAddress.test(value)) {
+        return false
+    }
+    return true
+}
+
+function checkCity(value) {
+    if(regExText.test(value)) {
+        return false
+    }
+    return true
+}
+
+function checkMail(value) {
+    if(regExMail.test(value)) {
+        return false
+    }
+    return true
+}
+
+let formFirstName = document.getElementById("firstName");
+let errorFirstName = document.getElementById("firstNameErrorMsg");
+
+formFirstName.addEventListener ("change" , (e) => {
+    console.log(e)
+    if(checkTextOnly(e.target.value)) {
+        errorFirstName.textContent = "Veuillez renseigner un prénom valide"
+    } else {
+        errorFirstName.textContent = ""
+        console.log(formFirstName.value)
+    }
+})
+
+let formLastName = document.getElementById("lastName");
+let errorLastName = document.getElementById("lastNameErrorMsg");
+
+formLastName.addEventListener ("change" , (e) => {
+    console.log(e)
+    if(checkTextOnly(e.target.value)) {
+        errorLastName.textContent = "Veuillez renseigner un nom de famille valide"
+    } else {
+        errorLastName.textContent = ""
+        console.log(formLastName.value)
+    }
+})
+
+let formAddress = document.getElementById("address");
+let errorAddress = document.getElementById("addressErrorMsg");
+
+formAddress.addEventListener ("change" , (e) => {
+    console.log(e)
+    if(checkAddress(e.target.value)) {
+        errorAddress.textContent = "Veuillez renseigner une adresse valide"
+    } else {
+        errorAddress.textContent = ""
+        console.log(formAddress.value)
+    }
+})
+
+let formCity = document.getElementById("city");
+let errorCity = document.getElementById("cityErrorMsg")
+
+formCity.addEventListener ("change" , (e) => {
+    console.log(e)
+    if(checkTextOnly(e.target.value)) {
+        errorCity.textContent = "Veuillez renseigner un nom de ville valide"
+    } else {
+        errorCity.textContent = ""
+        console.log(formCity.value)
+    }
+})
+
+let formEmail = document.getElementById("email");
+let errorEmail = document.getElementById("emailErrorMsg")
+
+formEmail.addEventListener ("change" , (e) => {
+    console.log(e)
+    if(checkMail(e.target.value)) {
+        errorEmail.textContent = "Veuillez renseigner une adresse email valide"
+    } else {
+        errorEmail.textContent = ""
+        console.log(formEmail.value)
+    }
+})
+
+
+
 
 
 
