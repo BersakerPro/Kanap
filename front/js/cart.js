@@ -312,8 +312,30 @@ formEmail.addEventListener ("change" , (e) => {
 })
 
 
+function postForm() {
+    let firstName = document.getElementById("firstName");
+    console.log(firstName.value)
+    let lastName = document.getElementById("lastName");
+    let address = document.getElementById("address");
+    let city = document.getElementById("city");
+    let email = document.getElementById("email");
 
+    let btnSubmit = document.getElementById("order")
+    console.log(btnSubmit)
 
+    btnSubmit.addEventListener("click" , (e) => {
+        console.log(btnSubmit)
+        console.log(e)
+        if(firstName.value == null ||
+           lastName.value == null ||
+           address.value == null ||
+           city.value == null ||
+           email.value == null) {
+               alert("Veuillez renseigner tout les champs du formulaire")
+           }
+    })
+
+}
 
 
 
