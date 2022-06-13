@@ -326,16 +326,17 @@ function postForm() {
     btnSubmit.addEventListener("click" , (e) => {
         console.log(btnSubmit)
         console.log(e)
-        if(firstName.value == null ||
-           lastName.value == null ||
-           address.value == null ||
-           city.value == null ||
-           email.value == null) {
+        if(firstName.value == "" ||
+           lastName.value == "" ||
+           address.value == "" ||
+           city.value == "" ||
+           email.value == "") {
                alert("Veuillez renseigner tout les champs du formulaire")
            }
     })
 
 }
+postForm()
 
 
 
