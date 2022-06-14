@@ -311,6 +311,42 @@ formEmail.addEventListener ("change" , (e) => {
     }
 })
 
+function postCommand() {
+    let productsID = [];
+    let products = getBasket();
+    for (let product of products) {
+        productsID.push(product.id)
+    }
+
+    let order = {
+        contact : {
+            firstName : firstName.value,
+            lastName : lastName.value,
+            address : address.value,
+            city : city.value,
+            email : email.value
+        } ,
+        products : productsID
+    };
+
+    fetch ("http://localhost:3000/api/products/order", {
+        method: "POST",
+        headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(order)
+    })
+    .then(function(resultat) {
+        if(resultat.ok) {
+            return resultat.json()
+        }
+    })
+    .then(function(order) {
+        console.log(order)
+    })
+}
+
 
 function postForm() {
     let firstName = document.getElementById("firstName");
@@ -320,11 +356,13 @@ function postForm() {
     let city = document.getElementById("city");
     let email = document.getElementById("email");
 
-    let btnSubmit = document.getElementById("order")
-    console.log(btnSubmit)
 
-    btnSubmit.addEventListener("click" , (e) => {
-        console.log(btnSubmit)
+    let btnSubmit = document.getElementById("order")
+    console.log(btnSubmit) 
+
+        let test = document.getElementById("test")
+
+    test.addEventListener("click" , (e) => {
         console.log(e)
         if(firstName.value == "" ||
            lastName.value == "" ||
@@ -332,11 +370,15 @@ function postForm() {
            city.value == "" ||
            email.value == "") {
                alert("Veuillez renseigner tout les champs du formulaire")
-           }
+        } else {
+            postCommand();
+        }
     })
 
 }
 postForm()
+
+
 
 
 
