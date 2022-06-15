@@ -51,18 +51,16 @@ function getNumberProduct(){
     totalProductsQuantity.textContent = totalQuantity;
 }
 
-async function getTotalPrice(){
-    let products = getBasket()
-    let totalPrice = 0
+async function getTotalPrice(product){
+    let basket = getBasket()
+    let totalPrice = 0;
+    let totalPriceProduct = 0;
 
-    for (let i=0 ; i<products.length ; i++) {
-        console.log(products[i].quantity)
-        let product = await fetch (`http://localhost:3000/api/products/${products[i].id}`);
-        let productData = await product.json();
-        let price = productData.price
+    for(let i=0; i<basket.length; i++){
+        console.log(product[i].price)
+        totalPriceProduct = product[i].price * product[i].quantity;
 
-        totalPrice += products[i].quantity * price
-
+        totalPrice += totalPriceProduct
     }
 
     let totalPriceContent = document.getElementById("totalPrice");
@@ -101,7 +99,7 @@ function checkBasket() {
 }
 
 
-function fillHtml(data, product){
+function fillHtml(product){
 
     let cart__items = document.getElementById("cart__items");
     //Création de la balise article cart__item
@@ -117,8 +115,8 @@ function fillHtml(data, product){
     cart__item__img.classList.add("cart__item__img");
     let img = document.createElement("img");
     cart__item__img.appendChild(img);
-    img.src = data.imageUrl;
-    img.alt = data.altTxt;
+    img.src = product.imageUrl;
+    img.alt = product.altTxt;
 
     //création de la balise div description du produit
     let cart__item__content = document.createElement("div");
@@ -140,7 +138,7 @@ function fillHtml(data, product){
     cart__item__content__description__name.textContent = product.name;
     cart__item__content__description__color.textContent = product.color;
     cart__item__content__description__price.textContent = Intl.NumberFormat("fr-FR", {
-        style:"currency", currency: "EUR",}).format(data.price);
+        style:"currency", currency: "EUR",}).format(product.price);
 
     //Création de la balise div settings
     let cart__item__content__settings = document.createElement("div");
@@ -179,19 +177,34 @@ function fillHtml(data, product){
 
 async function initPage(basketProduct) {
 
+    let arrayProduct = []
     console.log(basketProduct)
     for (product of basketProduct) {
         console.log(product)
         let promise = await fetch(`http://localhost:3000/api/products/${product.id}`)
         let data = await promise.json();
+
+        
+        let productInfo = {
+            id : data._id,
+            name : data.name,
+            description : data.description,
+            imageUrl : data.imageUrl,
+            altTxt : data.altTxt,
+            price: data.price,
+            color : product.color,
+            quantity : product.quantity
+        }
+        arrayProduct.push(productInfo)
+        console.log(arrayProduct)
         if (promise.ok) {
             console.log(data)
-            fillHtml(data, product)        
+            fillHtml(productInfo)        
         } 
     }
+    getTotalPrice(arrayProduct)
     clickQtyBtn();
     getNumberProduct()
-    getTotalPrice()
 
     removeProductFromPanier()
     
