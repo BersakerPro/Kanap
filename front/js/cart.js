@@ -342,8 +342,11 @@ function postCommand() {
             return resultat.json()
         }
     })
-    .then(function(order) {
-        console.log(order)
+    .then((data) => {
+        console.log(data)
+        console.log(data.orderId)
+
+        document.location.href = "confirmation.html?id=" + data.orderId
     })
 }
 
@@ -377,6 +380,7 @@ function postForm() {
 
 }
 postForm()
+
 
 
 
