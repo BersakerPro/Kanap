@@ -141,6 +141,7 @@ function checkBasket() {
 }
 
 
+//Fonction de remplissage du DOM
 function fillHtml(product){
 
     let cart__items = document.getElementById("cart__items");
@@ -186,7 +187,7 @@ function fillHtml(product){
     let cart__item__content__settings = document.createElement("div");
     cart__item__content.appendChild(cart__item__content__settings);
     cart__item__content__settings.classList.add("cart__item__content__settings");
-
+    
     let cart__item__content__settings__quantity = document.createElement("div");
     cart__item__content__settings.appendChild(cart__item__content__settings__quantity);
     cart__item__content__settings__quantity.classList.add("cart__item__content__settings__quantity");
@@ -212,21 +213,24 @@ function fillHtml(product){
     cart__item__content__settings__delete.append(deleteText);
     deleteText.classList.add("deleteItem");
     deleteText.textContent = "Supprimer" ; 
-    
-   
+       
 }
 
 
+//Fonction asynchrone au chargement de la page
 async function initPage(basketProduct) {
 
+    //On crée un tableau vide pour y stocker toutes les produits du panier
     let arrayProduct = []
-    console.log(basketProduct)
+    
+    //On boucle pour chaque produit présent dans le panier
     for (product of basketProduct) {
-        console.log(product)
+        
+        //Pour chaque produit, on requête l'API du produit concerné
         let promise = await fetch(`http://localhost:3000/api/products/${product.id}`)
         let data = await promise.json();
 
-        
+        //On crée un objet pour les infos du produit
         let productInfo = {
             id : data._id,
             name : data.name,
@@ -237,8 +241,10 @@ async function initPage(basketProduct) {
             color : product.color,
             quantity : product.quantity
         }
+        //On stocke l'objet dans la tableau
         arrayProduct.push(productInfo)
-        console.log(arrayProduct)
+        
+        //Si la requête est passée, on 
         if (promise.ok) {
             console.log(data)
             fillHtml(productInfo)        
