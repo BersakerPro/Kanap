@@ -3,40 +3,38 @@ var link = window.location.href;
 var url = new URL(link);
 var id = url.searchParams.get("id");
 
-//récupération ID produit
+//On déclare une variable contenant l'URL API du produit en ajoutant l'id récupéré
 var fetchingUrl = `http://localhost:3000/api/products/${id}`;
-console.log(fetchingUrl);
-console.log(id);
 
-//Requête API d'un produit par son ID
+//On requête l'APi du produit avec cette variable
 fetch(fetchingUrl)
     .then(function (response) {
-        console.log(response);
 
+        //On récupère la réponse au format JSON
         const productsData = response.json();
-        console.log(productsData)
 
         //Insertion des détails du produit dans la page
         productsData.then((product) => {
 
+            //L'image et son attribut
             document.querySelector(".item__img").innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
 
+            //Le nom et le prix du produit
             document.querySelector(".item__content__titlePrice").innerHTML = `<div class="item__content__titlePrice">
-        <h1 id="title">${product.name}</h1>
-        <p>Prix : <span id="price">${product.price}</span>€</p>
-        </div>`;
+            <h1 id="title">${product.name}</h1>
+            <p>Prix : <span id="price">${product.price}</span>€</p>
+            </div>`;
 
+            //La description du produit
             document.querySelector("#description").innerHTML = `<p id="description">${product.description}</p>`;
 
-
+            //La couleur du produit
             let htmlColor = `<option value="">--SVP, choisissez une couleur --</option>` + '';
+            //On boucle dans les infos de l'API pour récupérer toutes les couleurs disponibles
             for (let color of product.colors) {
-                console.log(color)
                 htmlColor += `<option value="${color}">${color}</option>`;
             }
-            console.log(htmlColor)
             document.querySelector("#colors").innerHTML = htmlColor;
-
         })
     })
 
@@ -50,11 +48,11 @@ function saveBasket(basket) {
 
 //Fonction de récupération des données dans le localStorage
 function getBasket() {
-    //Si le panier est vide, retourne un tableau vide
+    //Si le panier est vide, on retourne un tableau vide
     if (localStorage.getItem("basket") == null) {
         return []
     } else {
-        //Sinon, récupère les données en objet
+        //Sinon, on récupère les données en objet
         return JSON.parse(localStorage.getItem("basket"));
     }
 }
@@ -62,7 +60,7 @@ function getBasket() {
 //Fonction de vérification du contenu du panier
 function checkPanierStorage(id, color) {
     let products = getBasket();
-    //Si le panier est vide, retourne false
+    //Si le panier est vide, on retourne false
     if (products.length == 0) {
         return false;
     } else {
@@ -96,6 +94,7 @@ function majQuantity(product) {
             row.quantity += product.quantity;
         }
     }
+    //On met à jour le localStorage
     saveBasket(basket);
 }
 

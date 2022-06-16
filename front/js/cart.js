@@ -1,96 +1,138 @@
-function saveBasket(basket) {
+/////DECLARATION DES FONCTIONS/////
 
+//Fonction de sauvegarde dans le localStorage
+function saveBasket(basket) {
     //Sauvegarde des données en chaine de caractère
     localStorage.setItem("basket", JSON.stringify(basket));
 }
-//Récupération du panier via le localStorage
+
+// Fonction de récupération du panier via le localStorage
 function getBasket(){
-    if(localStorage.getItem("basket")==null){
-        return[]
-    }else{
+    if(localStorage.getItem("basket") == null){
+        return[];
+    } else {
         return JSON.parse(localStorage.getItem("basket"));
     }
 }
 
+//Fonction d'utilisation de l'input quantité
 function clickQtyBtn() {
-    let basket = getBasket()
-    let qtyBtn = document.getElementsByClassName("itemQuantity");
-    console.log(qtyBtn);
-    for (const row of qtyBtn) {
-        console.log(row);
-        row.addEventListener("change", (e) => {
-            console.log(e);
-            let productId = e.composedPath()[4].dataset.id
-            console.log(productId)
 
-            for (product of basket) {
-                if(product.id == productId){
-                    product.quantity = parseInt(e.target.value)
+    //On déclare dans la variable basket le contenu du localStorage
+    let basket = getBasket();
+    //On récupère la classe de l'input
+    let qtyBtn = document.getElementsByClassName("itemQuantity");
+
+    //On crée une boucle pour chaque input de la page
+    for (const row of qtyBtn) {
+        //row correspondant à un seul input
+        
+        //On déclenche l'évènement sur un input
+        row.addEventListener("change", (e) => {
+            
+            //On déclare où se trouve l'id du produit dans le localStorage
+            let productId = e.composedPath()[4].dataset.id
+            
+            //On boucle dans le localStorage pour chaque produit
+            for (item of basket) {
+
+                //On vérifie l'id du produit à modifier
+                if(item.id == productId){
+
+                    //On change la valeur de quantité
+                    item.quantity = parseInt(e.target.value);
                 }
             }
             alert(e.target.value);
-            e.target.setAttribute("value" , e.target.value)
-            console.log(row)
-            getNumberProduct()
 
-            saveBasket(basket)
+            //On met à jour le nombre total de produit dans le panier
+            getNumberProduct();
+
+            //On met à jour le localStorage
+            saveBasket(basket);
            
-            getTotalPrice()
-
+            //Refresh de la page pour mettre à jour le prix total
+            location.reload();
         });
     }
 }
+
+//Fonction de calcul du total des articles
 function getNumberProduct(){
+
+    //On récupère la quantité de chaque produit
     let itemQuantity = document.getElementsByClassName("itemQuantity");
+    //On déclare la variable du total à 0
     totalQuantity = 0
+
+    //On boucle pour chaque quantité identifié 
     for (let i = 0 ; i < itemQuantity.length ; i++) {
+        //On incrémente chaque quantité à la variable du total
         totalQuantity += itemQuantity[i].valueAsNumber;
-        console.log(totalQuantity)
     }
+
+    //On modifie le DOM
     let totalProductsQuantity = document.getElementById("totalQuantity");
     totalProductsQuantity.textContent = totalQuantity;
 }
 
-async function getTotalPrice(product){
+//Fonction de calcul du prix total
+function getTotalPrice(product){
+
+    //On récupère le panier dans le localStorage
     let basket = getBasket()
+    //On déclare 2 variables du total prix par produit et pour le panier
     let totalPrice = 0;
     let totalPriceProduct = 0;
 
+    //On boucle dans le panier
     for(let i=0; i<basket.length; i++){
-        console.log(product[i].price)
+        
+        //Pour chaque produit, on multiplie la quantité par le prix
         totalPriceProduct = product[i].price * product[i].quantity;
-
+        //On incrémente ces valeurs au prix total du panier
         totalPrice += totalPriceProduct
     }
 
+    //On modifie le DOM
     let totalPriceContent = document.getElementById("totalPrice");
     totalPriceContent.textContent = totalPrice;
 }
 
+//Fonction de suppression du panier
 function removeProductFromPanier() {
+    //On récupère le bouton "supprimer"
     let deleteBtn = document.getElementsByClassName("deleteItem");
-    console.log(deleteBtn)
+    
+    //On récupère le panier
     let products = getBasket()
 
+    //On boucle pour chaque bouton
     for (let i=0 ; i<deleteBtn.length ; i++) {
+
+        //Pour chaque bouton, on déclenche l'évènement
         deleteBtn[i].addEventListener("click" , (e) => {
-            console.log(e)
-
-            console.log(products)
-            console.log(i)
-
+    
+            //On supprimme du loa=calStorage l'élément en cours dans la boucle 
             products.splice(i , 1)
+            //Et on le supprime du DOM
             e.target.closest('article').remove();
             alert("produit supprimé du panier")
 
+            //On sauvegarde le nouveau panier et on refresh la page
             saveBasket(products)
             location.reload()
         })
     }
 
 }
+
+//Fonction de vérification, du contenu du panier
 function checkBasket() {
+
+    //On récupère le panier
     let basket = getBasket()
+    //Si le panier est vide, on retourne false, sinon true
     if(basket.length == 0 || basket == null){
         return false
     } else {
@@ -202,8 +244,8 @@ async function initPage(basketProduct) {
             fillHtml(productInfo)        
         } 
     }
-    getTotalPrice(arrayProduct)
     clickQtyBtn();
+    getTotalPrice(arrayProduct)
     getNumberProduct()
 
     removeProductFromPanier()
