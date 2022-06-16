@@ -16,10 +16,11 @@ function getBasket(){
 }
 
 //Fonction d'utilisation de l'input quantité
-function clickQtyBtn() {
+function clickQtyBtn(products) {
+    console.log(products)
 
-    //On déclare dans la variable basket le contenu du localStorage
-    let basket = getBasket();
+    let basket = getBasket()
+
     //On récupère la classe de l'input
     let qtyBtn = document.getElementsByClassName("itemQuantity");
 
@@ -34,7 +35,7 @@ function clickQtyBtn() {
             let productId = e.composedPath()[4].dataset.id
             
             //On boucle dans le localStorage pour chaque produit
-            for (item of basket) {
+            for (item of products) {
 
                 //On vérifie l'id du produit à modifier
                 if(item.id == productId){
@@ -49,10 +50,11 @@ function clickQtyBtn() {
             getNumberProduct();
 
             //On met à jour le localStorage
-            saveBasket(basket);
+            saveBasket(products);
+            console.log(localStorage.getItem("basket"))
            
             //Refresh de la page pour mettre à jour le prix total
-            location.reload();
+            getTotalPrice(products)
         });
     }
 }
@@ -77,19 +79,20 @@ function getNumberProduct(){
 }
 
 //Fonction de calcul du prix total
-function getTotalPrice(product){
+function getTotalPrice(products){
 
-    //On récupère le panier dans le localStorage
-    let basket = getBasket()
+    console.log(products)
+
     //On déclare 2 variables du total prix par produit et pour le panier
     let totalPrice = 0;
     let totalPriceProduct = 0;
 
     //On boucle dans le panier
-    for(let i=0; i<basket.length; i++){
+    for(let product of products){
+        console.log(product)
         
         //Pour chaque produit, on multiplie la quantité par le prix
-        totalPriceProduct = product[i].price * product[i].quantity;
+        totalPriceProduct = product.price * product.quantity;
         //On incrémente ces valeurs au prix total du panier
         totalPrice += totalPriceProduct
     }
@@ -239,24 +242,24 @@ async function initPage(basketProduct) {
             altTxt : data.altTxt,
             price: data.price,
             color : product.color,
-            quantity : product.quantity
+            quantity : parseInt(product.quantity)
         }
         //On stocke l'objet dans la tableau
         arrayProduct.push(productInfo)
         
-        //Si la requête est passée, on 
+        //Si la requête est passée, on déclenche la fonction de remplissage du DOM
         if (promise.ok) {
             console.log(data)
             fillHtml(productInfo)        
         } 
     }
-    clickQtyBtn();
+    //On déclenche les autres fonctions settings ()
+    clickQtyBtn(arrayProduct);
     getTotalPrice(arrayProduct)
     getNumberProduct()
 
     removeProductFromPanier()
     
-
 }
 
 
@@ -274,12 +277,9 @@ if(checkBasket()){
 
 //GESTION DU FORMULAIRE
 
-let regExText = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");
-let regExMail = new RegExp("^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$");
-let regExAddress = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
-
 
 function checkTextOnly(value) {
+    let regExText = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");
     if(regExText.test(value)) {
         return false
     }
@@ -287,20 +287,15 @@ function checkTextOnly(value) {
 }
 
 function checkAddress(value) {
+    let regExAddress = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
     if(regExAddress.test(value)) {
         return false
     }
     return true
 }
 
-function checkCity(value) {
-    if(regExText.test(value)) {
-        return false
-    }
-    return true
-}
-
 function checkMail(value) {
+    let regExMail = new RegExp("^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$");
     if(regExMail.test(value)) {
         return false
     }
@@ -372,7 +367,7 @@ formEmail.addEventListener ("change" , (e) => {
     }
 })
 
-function postCommand() {
+function postCommand(contact) {
     let productsID = [];
     let products = getBasket();
     for (let product of products) {
@@ -380,13 +375,7 @@ function postCommand() {
     }
 
     let order = {
-        contact : {
-            firstName : firstName.value,
-            lastName : lastName.value,
-            address : address.value,
-            city : city.value,
-            email : email.value
-        } ,
+        contact : contact,
         products : productsID
     };
 
@@ -397,45 +386,46 @@ function postCommand() {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(order)
-    })
-    .then(function(resultat) {
-        if(resultat.ok) {
-            return resultat.json()
-        }
-    })
-    .then((data) => {
-        console.log(data)
-        console.log(data.orderId)
+        })
+        .then(function(resultat) {
+            if(resultat.ok) {
+                return resultat.json()
+            }
+        })
+        .then((data) => {
+            console.log(data)
+            console.log(data.orderId)
 
-        document.location.href = "confirmation.html?id=" + data.orderId
-    })
-}
+            document.location.href = "confirmation.html?id=" + data.orderId
+        })
+    }
 
 
 function postForm() {
-    let firstName = document.getElementById("firstName");
-    console.log(firstName.value)
-    let lastName = document.getElementById("lastName");
-    let address = document.getElementById("address");
-    let city = document.getElementById("city");
-    let email = document.getElementById("email");
-
-
+    
     let btnSubmit = document.getElementById("order")
     console.log(btnSubmit) 
 
         let test = document.getElementById("test")
 
     test.addEventListener("click" , (e) => {
-        console.log(e)
-        if(firstName.value == "" ||
-           lastName.value == "" ||
-           address.value == "" ||
-           city.value == "" ||
-           email.value == "") {
+
+        
+        let contact = {
+            firstName : document.getElementById("firstName").value,
+            lastName : document.getElementById("lastName").value,
+            address : document.getElementById("address").value,
+            city : document.getElementById("city").value,
+            email : document.getElementById("email").value
+        } 
+        if(contact.firstName.length == 0 ||
+           contact.lastName.length == 0 ||
+           contact.address.length == 0 ||
+           contact.city.length == 0 ||
+           contact.email.length == 0) {
                alert("Veuillez renseigner tout les champs du formulaire")
         } else {
-            postCommand();
+            postCommand(contact);
         }
     })
 
