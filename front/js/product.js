@@ -2,6 +2,8 @@
 var link = window.location.href;
 var url = new URL(link);
 var id = url.searchParams.get("id");
+//console.log(id)
+
 
 //On déclare une variable contenant l'URL API du produit en ajoutant l'id récupéré
 var fetchingUrl = `http://localhost:3000/api/products/${id}`;
@@ -9,13 +11,15 @@ var fetchingUrl = `http://localhost:3000/api/products/${id}`;
 //On requête l'APi du produit avec cette variable
 fetch(fetchingUrl)
     .then(function (response) {
-
+        
         //On récupère la réponse au format JSON
         const productsData = response.json();
-
+        
         //Insertion des détails du produit dans la page
         productsData.then((product) => {
 
+            //console.log(product)
+            
             //L'image et son attribut
             document.querySelector(".item__img").innerHTML = `<img src="${product.imageUrl}" alt="${product.altTxt}">`;
 
@@ -67,7 +71,6 @@ function checkPanierStorage(id, color) {
         //Sinon, on boucle dans le contenu du panier
         for (let product of products) {
             console.log(product)
-            console.log(products)
             //Si l'id et la couleur du produit ajouté sont les même qu'un produit déjà présent
             if (product.id == id && product.color == color) {
                 //Alerte pour l'utilisateur
@@ -88,12 +91,15 @@ function majQuantity(product) {
 
     //On boucle dans le panier
     for (let row of basket) {
+        //console.log(row.quantity)
         //Si l'id et la couleur du produit ajouté sont les même que celui déjà présent
         if (product.id == row.id && product.color == row.color) {
             //On ajoute la quantité du produit ajouté à celle de celui déjà présent
             row.quantity += product.quantity;
         }
+        //console.log(row.quantity)
     }
+
     //On met à jour le localStorage
     saveBasket(basket);
 }
@@ -118,7 +124,6 @@ function addProduct(product) {
         //Si la fonction de vérification retourne true
         //On déclare la fonction d'ajout d'un nouveau produit
         addNewProduct(product);
-
     }
 }
 let button = document.querySelector("#addToCart");
@@ -149,6 +154,6 @@ button.addEventListener("click", event => {
     } else {
         //Sinon on déclare la fonction d'ajout au panier
         addProduct(dataProduct);
-        console.log(dataProduct);
+        //console.log(dataProduct);
     }
 })

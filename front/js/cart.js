@@ -17,10 +17,8 @@ function getBasket(){
 
 //Fonction d'utilisation de l'input quantité
 function clickQtyBtn(products) {
-    console.log(products)
-
-    let basket = getBasket()
-
+    
+    
     //On récupère la classe de l'input
     let qtyBtn = document.getElementsByClassName("itemQuantity");
 
@@ -34,14 +32,16 @@ function clickQtyBtn(products) {
             //On déclare où se trouve l'id du produit dans le localStorage
             let productId = e.composedPath()[4].dataset.id
             
+            
             //On boucle dans le localStorage pour chaque produit
             for (item of products) {
 
                 //On vérifie l'id du produit à modifier
                 if(item.id == productId){
-
+                    
                     //On change la valeur de quantité
                     item.quantity = parseInt(e.target.value);
+                    
                 }
             }
             alert(e.target.value);
@@ -51,9 +51,8 @@ function clickQtyBtn(products) {
 
             //On met à jour le localStorage
             saveBasket(products);
-            console.log(localStorage.getItem("basket"))
            
-            //Refresh de la page pour mettre à jour le prix total
+            //On dé lre à nouveau la fonction du prix total
             getTotalPrice(products)
         });
     }
@@ -89,8 +88,7 @@ function getTotalPrice(products){
 
     //On boucle dans le panier
     for(let product of products){
-        console.log(product)
-        
+                
         //Pour chaque produit, on multiplie la quantité par le prix
         totalPriceProduct = product.price * product.quantity;
         //On incrémente ces valeurs au prix total du panier
@@ -253,21 +251,22 @@ async function initPage(basketProduct) {
             fillHtml(productInfo)        
         } 
     }
-    //On déclenche les autres fonctions settings ()
+    //On déclenche les autres fonctions settings 
     clickQtyBtn(arrayProduct);
     getTotalPrice(arrayProduct)
     getNumberProduct()
-
-    removeProductFromPanier()
-    
+    removeProductFromPanier()  
 }
 
+/////CHARGEMENT DE LA PAGE/////
 
+// Si la fonction checkBasket renvoie true, on déclenche initPage
 if(checkBasket()){
     
     let basketProduct = getBasket()
     initPage(basketProduct)
 
+//Sinon, on affiche un paragraphe précisant que le panier est vide
 } else {
     document.querySelector("#cart__items").insertAdjacentHTML("afterend" , `<div style="text-align:center ; width:100%" class="cart__item__img">
     <p>Votre panier est vide</p>
@@ -275,9 +274,9 @@ if(checkBasket()){
 }
 
 
-//GESTION DU FORMULAIRE
+/////GESTION DU FORMULAIRE/////
 
-
+//Fonction qui vérifie que le champ ne comporte que des lettres
 function checkTextOnly(value) {
     let regExText = new RegExp("^[a-zA-Z-àâäéèêëïîôöùûüç ,.'-]+$");
     if(regExText.test(value)) {
@@ -286,6 +285,7 @@ function checkTextOnly(value) {
     return true
 }
 
+//Fonction qui vérifie que le format du champ correspond à celui d'une adresse
 function checkAddress(value) {
     let regExAddress = new RegExp("^[0-9]{1,3}(?:(?:[,. ]){1}[-a-zA-Zàâäéèêëïîôöùûüç]+)+");
     if(regExAddress.test(value)) {
@@ -294,6 +294,7 @@ function checkAddress(value) {
     return true
 }
 
+//Fonction qui vérifie que le format du champ correspond à celui d'une adresse mail
 function checkMail(value) {
     let regExMail = new RegExp("^[a-zA-Z0-9._-]+[@]{1}[a-zA-Z0-9._-]+[.]{1}[a-z]{2,10}$");
     if(regExMail.test(value)) {
@@ -302,11 +303,15 @@ function checkMail(value) {
     return true
 }
 
+
+//On déclenche les évènement au remplissage des champs en vérifiant leur contenu avec les fonctions de vérif
+
+//Prénom
 let formFirstName = document.getElementById("firstName");
 let errorFirstName = document.getElementById("firstNameErrorMsg");
 
 formFirstName.addEventListener ("change" , (e) => {
-    console.log(e)
+    
     if(checkTextOnly(e.target.value)) {
         errorFirstName.textContent = "Veuillez renseigner un prénom valide"
     } else {
@@ -315,11 +320,12 @@ formFirstName.addEventListener ("change" , (e) => {
     }
 })
 
+//Nom
 let formLastName = document.getElementById("lastName");
 let errorLastName = document.getElementById("lastNameErrorMsg");
 
 formLastName.addEventListener ("change" , (e) => {
-    console.log(e)
+    
     if(checkTextOnly(e.target.value)) {
         errorLastName.textContent = "Veuillez renseigner un nom de famille valide"
     } else {
@@ -328,11 +334,12 @@ formLastName.addEventListener ("change" , (e) => {
     }
 })
 
+//Adresse
 let formAddress = document.getElementById("address");
 let errorAddress = document.getElementById("addressErrorMsg");
 
 formAddress.addEventListener ("change" , (e) => {
-    console.log(e)
+    
     if(checkAddress(e.target.value)) {
         errorAddress.textContent = "Veuillez renseigner une adresse valide"
     } else {
@@ -341,11 +348,12 @@ formAddress.addEventListener ("change" , (e) => {
     }
 })
 
+//Ville
 let formCity = document.getElementById("city");
 let errorCity = document.getElementById("cityErrorMsg")
 
 formCity.addEventListener ("change" , (e) => {
-    console.log(e)
+    
     if(checkTextOnly(e.target.value)) {
         errorCity.textContent = "Veuillez renseigner un nom de ville valide"
     } else {
@@ -354,11 +362,12 @@ formCity.addEventListener ("change" , (e) => {
     }
 })
 
+//Adresse mail
 let formEmail = document.getElementById("email");
 let errorEmail = document.getElementById("emailErrorMsg")
 
 formEmail.addEventListener ("change" , (e) => {
-    console.log(e)
+    
     if(checkMail(e.target.value)) {
         errorEmail.textContent = "Veuillez renseigner une adresse email valide"
     } else {
@@ -367,18 +376,23 @@ formEmail.addEventListener ("change" , (e) => {
     }
 })
 
+//Fonction d'envoi à l'API 
 function postCommand(contact) {
     let productsID = [];
     let products = getBasket();
+
+    //Pour chaque produit, on récupère l'id et on le place dans un tableau
     for (let product of products) {
         productsID.push(product.id)
     }
 
+    //On crée un objet avec les infos du formulaire et le tableau des ids
     let order = {
         contact : contact,
         products : productsID
     };
 
+    //On déclenche le requête POST
     fetch ("http://localhost:3000/api/products/order", {
         method: "POST",
         headers: {
@@ -400,15 +414,12 @@ function postCommand(contact) {
         })
     }
 
-
+//Fonction déclenchant l'évènement "commander"
 function postForm() {
     
     let btnSubmit = document.getElementById("order")
-    console.log(btnSubmit) 
 
-        let test = document.getElementById("test")
-
-    test.addEventListener("click" , (e) => {
+    btnSubmit.addEventListener("click" , (e) => {
 
         
         let contact = {
